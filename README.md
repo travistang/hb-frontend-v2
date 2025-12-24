@@ -51,13 +51,13 @@ Navigate to [http://localhost:3000](http://localhost:3000) to see the app.
 
 ### Key Differences from V1
 
-| Feature | V1 | V2 |
-|---------|----|----|
-| **CORS Handling** | External CORS proxy (Docker) | Next.js API routes |
-| **Authentication** | localStorage | HTTP-only cookies |
-| **Sign In** | Dialog popup | Dedicated `/signin` page |
-| **Docker for Dev** | Required | Not required |
-| **Production Build** | Static export (nginx) | Standalone Node.js server |
+| Feature              | V1                           | V2                        |
+| -------------------- | ---------------------------- | ------------------------- |
+| **CORS Handling**    | External CORS proxy (Docker) | Next.js API routes        |
+| **Authentication**   | localStorage                 | HTTP-only cookies         |
+| **Sign In**          | Dialog popup                 | Dedicated `/signin` page  |
+| **Docker for Dev**   | Required                     | Not required              |
+| **Production Build** | Static export (nginx)        | Standalone Node.js server |
 
 ### API Routes
 
@@ -80,12 +80,12 @@ All API requests go through Next.js API routes that mirror the hiking-buddies.co
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run start` | Start production server |
-| `npm run lint` | Run ESLint |
+| Command         | Description              |
+| --------------- | ------------------------ |
+| `npm run dev`   | Start development server |
+| `npm run build` | Build for production     |
+| `npm run start` | Start production server  |
+| `npm run lint`  | Run ESLint               |
 
 ## Production Docker Build
 
@@ -149,3 +149,8 @@ To learn more about Next.js, take a look at the following resources:
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial
 
+## TODOs
+
+There are list of things that are being mocked and needs to be **immediately** replaced once there are more data:
+
+- Ways to get identity from JWT token (needs another HB endpoint) - currently we count on "/api/routes/user_main_page/:pk"

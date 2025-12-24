@@ -3,16 +3,19 @@
 import { ChevronDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { EventCard } from "@/components/event/event-card";
 import { EventData } from "@/components/event/types";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 
 interface EventsSectionProps {
   title: string;
   count: number;
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
+  defaultOpen: boolean;
   isLoading?: boolean;
   emptyMessage: string;
   events: EventData[];
@@ -22,15 +25,15 @@ interface EventsSectionProps {
 export function EventsSection({
   title,
   count,
-  isOpen,
-  onOpenChange,
+  defaultOpen = false,
   isLoading = false,
   emptyMessage,
   events,
   renderEvent,
 }: EventsSectionProps) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
   return (
-    <Collapsible open={isOpen} onOpenChange={onOpenChange}>
+    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <CollapsibleTrigger asChild>
         <button className="flex w-full items-center gap-2 text-left">
           <div className="text-base font-semibold">{title}</div>
@@ -46,7 +49,9 @@ export function EventsSection({
         <div className="grid gap-3">
           {count === 0 && !isLoading ? (
             <Card>
-              <CardContent className="p-6 text-sm text-muted-foreground">{emptyMessage}</CardContent>
+              <CardContent className="p-6 text-sm text-muted-foreground">
+                {emptyMessage}
+              </CardContent>
             </Card>
           ) : null}
           {events.map((event, index) => {
@@ -62,4 +67,3 @@ export function EventsSection({
     </Collapsible>
   );
 }
-

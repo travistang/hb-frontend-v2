@@ -1,12 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import { Car, Clock, ImageOff, Train, Triangle, ArrowRightToLine } from "lucide-react";
+import {
+  Car,
+  Clock,
+  ImageOff,
+  Train,
+  Triangle,
+  ArrowRightToLine,
+} from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SacScaleBadge } from "@/components/common/sac-scale-badge";
 import { EventCardProps, NewsFeedPicture } from "./types";
+import { useRouter } from "next/navigation";
 
 const ASSET_BASE_URL = process.env.NEXT_PUBLIC_ASSET_BASE_URL;
 
@@ -40,7 +48,15 @@ function safeAssetUrl(path: unknown) {
   return `${ASSET_BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
 }
 
-export function EventCard({ event, variant = "standard", onOpenGallery }: EventCardProps) {
+export function EventCard({
+  event,
+  variant = "standard",
+  onOpenGallery,
+}: EventCardProps) {
+  const router = useRouter();
+  const handleClick = () => {
+    router.push(`/events/${event.id}`);
+  };
   const title = event?.title ?? "Untitled";
   const startDate = formatStart(event?.start);
   const city = event?.city?.name;
@@ -57,12 +73,16 @@ export function EventCard({ event, variant = "standard", onOpenGallery }: EventC
   const route = event?.route;
 
   // Standard variant: single cover image
-  const cover = variant === "standard" ? safeAssetUrl(event?.cover_picture_url) : null;
+  const cover =
+    variant === "standard" ? safeAssetUrl(event?.cover_picture_url) : null;
   const coverSrc =
-    cover && cover !== `${ASSET_BASE_URL}#` && cover !== `${ASSET_BASE_URL}/#` ? cover : "";
+    cover && cover !== `${ASSET_BASE_URL}#` && cover !== `${ASSET_BASE_URL}/#`
+      ? cover
+      : "";
 
   // Community variant: gallery of pictures
-  const pictures = variant === "community" ? (event?.pictures_uploaded ?? []) : [];
+  const pictures =
+    variant === "community" ? event?.pictures_uploaded ?? [] : [];
 
   const isCommunity = variant === "community";
   const isStandard = variant === "standard";
@@ -70,8 +90,10 @@ export function EventCard({ event, variant = "standard", onOpenGallery }: EventC
   const isPastEvent = startDate ? startDate < new Date() : false;
 
   return (
-    <Card className="overflow-hidden p-1">
-      <CardContent className={isCommunity ? "flex flex-col gap-3 p-4" : "flex gap-4 p-4"}>
+    <Card onClick={handleClick} className="overflow-hidden p-1">
+      <CardContent
+        className={isCommunity ? "flex flex-col gap-3 p-4" : "flex gap-4 p-4"}
+      >
         {isStandard && (
           <div className="shrink-0">
             {coverSrc ? (
@@ -96,10 +118,16 @@ export function EventCard({ event, variant = "standard", onOpenGallery }: EventC
           <CardHeader className="gap-2 p-0">
             <div className="flex flex-wrap items-center gap-2">
               <CardTitle className="text-base">{title}</CardTitle>
-              {activityName && <Badge variant="secondary">{activityName}</Badge>}
+              {activityName && (
+                <Badge variant="secondary">{activityName}</Badge>
+              )}
               {typeof isCarPool === "boolean" ? (
                 <Badge variant="outline" className="flex items-center gap-1">
-                  {isCarPool ? <Car className="h-3 w-3" /> : <Train className="h-3 w-3" />}
+                  {isCarPool ? (
+                    <Car className="h-3 w-3" />
+                  ) : (
+                    <Train className="h-3 w-3" />
+                  )}
                   {isCarPool ? "Carpool" : "Public"}
                 </Badge>
               ) : null}
@@ -129,9 +157,14 @@ export function EventCard({ event, variant = "standard", onOpenGallery }: EventC
             {(organizerName || organizerLastName) && (
               <div className="flex items-center gap-2">
                 <Avatar className="h-6 w-6">
-                  <AvatarImage src={organizerPicture} alt={`${organizerName} ${organizerLastName}`} />
+                  <AvatarImage
+                    src={organizerPicture}
+                    alt={`${organizerName} ${organizerLastName}`}
+                  />
                   <AvatarFallback>
-                    {organizerName?.[0]?.toUpperCase() || organizerLastName?.[0]?.toUpperCase() || "?"}
+                    {organizerName?.[0]?.toUpperCase() ||
+                      organizerLastName?.[0]?.toUpperCase() ||
+                      "?"}
                   </AvatarFallback>
                 </Avatar>
                 <span>
@@ -140,15 +173,22 @@ export function EventCard({ event, variant = "standard", onOpenGallery }: EventC
               </div>
             )}
 
-            {!isPastEvent && (going != null || spaces != null || (waiting != null && spaces != null && spaces > 0)) && (
-              <div className="flex flex-wrap gap-2">
-                {going != null && <Badge variant="outline">Going: {going}</Badge>}
-                {spaces != null && <Badge variant="outline">Spaces: {spaces}</Badge>}
-                {waiting != null && spaces != null && spaces === 0 && (
-                  <Badge variant="outline">Waiting: {waiting}</Badge>
-                )}
-              </div>
-            )}
+            {!isPastEvent &&
+              (going != null ||
+                spaces != null ||
+                (waiting != null && spaces != null && spaces > 0)) && (
+                <div className="flex flex-wrap gap-2">
+                  {going != null && (
+                    <Badge variant="outline">Going: {going}</Badge>
+                  )}
+                  {spaces != null && (
+                    <Badge variant="outline">Spaces: {spaces}</Badge>
+                  )}
+                  {waiting != null && spaces != null && spaces === 0 && (
+                    <Badge variant="outline">Waiting: {waiting}</Badge>
+                  )}
+                </div>
+              )}
 
             {route && (
               <div className="flex flex-wrap items-center gap-2">
@@ -177,12 +217,16 @@ export function EventCard({ event, variant = "standard", onOpenGallery }: EventC
             {/* Gallery (community variant only) */}
             {isCommunity && pictures.length > 0 && onOpenGallery && (
               <div className="mt-1 grid">
-                <div className="mb-1 text-xs font-medium text-muted-foreground">Photos</div>
+                <div className="mb-1 text-xs font-medium text-muted-foreground">
+                  Photos
+                </div>
                 <div
                   className="flex gap-2 overflow-x-auto pb-1"
                   style={{
-                    maskImage: "linear-gradient(to right, black calc(100% - 2rem), transparent 100%)",
-                    WebkitMaskImage: "linear-gradient(to right, black calc(100% - 2rem), transparent 100%)",
+                    maskImage:
+                      "linear-gradient(to right, black calc(100% - 2rem), transparent 100%)",
+                    WebkitMaskImage:
+                      "linear-gradient(to right, black calc(100% - 2rem), transparent 100%)",
                   }}
                 >
                   {pictures.map((pic: NewsFeedPicture, index: number) => {
@@ -215,4 +259,3 @@ export function EventCard({ event, variant = "standard", onOpenGallery }: EventC
     </Card>
   );
 }
-

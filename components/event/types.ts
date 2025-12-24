@@ -1,3 +1,5 @@
+import { Activity } from "@/services/event-service/validator";
+
 export type EventData = {
   id?: number | string;
   title?: string;
@@ -6,7 +8,7 @@ export type EventData = {
     name?: string;
   };
   activity_name?: string;
-  activity?: string;
+  activity?: Activity;
   organizer?: {
     name?: string;
     last_name?: string;
@@ -39,7 +41,7 @@ export type NewsFeedEvent = {
     is_car_pool?: boolean;
     max_limit?: number;
   };
-  activity?: string;
+  activity?: Activity;
   num_of_days?: number;
   route?: any;
   organizer?: {
@@ -89,4 +91,3 @@ export type DashboardResponse = {
   user_upcoming_events?: Array<[boolean, any]>;
   user_recent_events?: Array<[boolean, any]>;
 };
-

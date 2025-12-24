@@ -31,22 +31,39 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-    <head>
-      <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="/apple-touch-icon.adfa657da1d7.png"/>
-      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.6da47c6ba506.png"/>
-      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.6159b014ab6d.png"/>
-    </head>
-    <body
-      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-    >
-      <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans">
-        <main className="min-h-screen w-full max-w-5xl flex-col items-start justify-between py-10 px-16 bg-white sm:items-start">
-          <MainMenu isLoggedIn={auth.isLoggedIn} profilePicture={profilePicture} />
-          {children}
-        </main>
-      </div>
-    </body>
+      <head>
+        <link
+          rel="apple-touch-icon"
+          type="image/png"
+          sizes="180x180"
+          href="/apple-touch-icon.adfa657da1d7.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.6da47c6ba506.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.6159b014ab6d.png"
+        />
+      </head>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans">
+          <main className="min-h-screen w-full flex-col items-center justify-center py-10 px-16 bg-white">
+            <MainMenu
+              isLoggedIn={auth.isLoggedIn}
+              profilePicture={profilePicture}
+            />
+            {children}
+          </main>
+        </div>
+      </body>
     </html>
   );
 }
-

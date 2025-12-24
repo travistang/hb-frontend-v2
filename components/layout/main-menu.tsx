@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React, { useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MapPinOff, MapPinCheck, MapPinPlus } from "lucide-react";
@@ -24,96 +24,90 @@ interface MainMenuProps {
   profilePicture?: string | null;
 }
 
-export default function MainMenu({ isLoggedIn, profilePicture }: MainMenuProps) {
-  const viewport = false;
+const NavigationItem = ({
+  href,
+  children,
+  className,
+}: {
+  href?: string;
+  children: React.ReactNode;
+  className?: string;
+}) => {
   const pathname = usePathname();
-
-  const isActive = React.useCallback((href: string) => {
-    if (!pathname) return false;
-    
-    // Normalize both paths by removing trailing slashes for comparison
-    const normalizePath = (path: string) => path === "/" ? "/" : path.replace(/\/$/, "");
-    const normalizedPathname = normalizePath(pathname);
-    const normalizedHref = normalizePath(href);
-    
-    if (normalizedHref === "/") {
-      return normalizedPathname === "/";
-    }
-    
-    // For non-root paths, check if pathname exactly matches or is a sub-route
-    return normalizedPathname === normalizedHref || normalizedPathname.startsWith(`${normalizedHref}/`);
-  }, [pathname]);
+  const isActive = useMemo(() => {
+    if (!href) return false;
+    return pathname === href;
+  }, [href, pathname]);
+  return (
+    <NavigationMenuItem>
+      <NavigationMenuLink
+        asChild
+        className={cn(
+          navigationMenuTriggerStyle(),
+          "cursor-pointer",
+          isActive
+            ? "font-bold bg-accent text-accent-foreground"
+            : "text-primary",
+          className
+        )}
+      >
+        <Link href={href ?? "/"}>{children}</Link>
+      </NavigationMenuLink>
+    </NavigationMenuItem>
+  );
+};
+export default function MainMenu({
+  isLoggedIn,
+  profilePicture,
+}: MainMenuProps) {
+  const viewport = false;
 
   return (
-    <NavigationMenu viewport={viewport}
-        className="pb-10"
-    >
+    <NavigationMenu viewport={viewport} className="pb-10 w-full">
       <NavigationMenuList className="flex-wrap">
-        <NavigationMenuItem>
-          <Link href="/">
-            <Image
-              src={Logo}
-              alt="Hiking Buddies Logo"
-              width="50"
-              className="mr-2"
-            />
-          </Link>
-        </NavigationMenuItem>
-
-        <NavigationMenuItem>
+        <NavigationMenuItem className="hover:bg-transparent active:bg-transparent cursor-pointer">
           <NavigationMenuLink
             asChild
-            className={cn(
-              navigationMenuTriggerStyle(),
-              isActive("/") && "bg-accent text-accent-foreground"
-            )}
+            className="hover:bg-transparent active:bg-transparent cursor-pointer"
           >
-            <Link href="/">Home</Link>
+            <Link href="/">
+              <Image
+                src={Logo}
+                alt="Hiking Buddies Logo"
+                width="50"
+                className="mr-2"
+              />
+            </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
+        <NavigationItem className={navigationMenuTriggerStyle()} href="/">
+          Home
+        </NavigationItem>
+        <NavigationItem className={navigationMenuTriggerStyle()} href="/events">
+          Events
+        </NavigationItem>
+        <NavigationItem className={navigationMenuTriggerStyle()} href="/routes">
+          Routes
+        </NavigationItem>
 
-        <NavigationMenuItem>
-          <NavigationMenuLink
-            asChild
-            className={cn(
-              navigationMenuTriggerStyle(),
-              isActive("/events/") && "bg-accent text-accent-foreground"
-            )}
-          >
-            <Link href="/events/">Events</Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-
-        <NavigationMenuItem>
-          <NavigationMenuLink
-            asChild
-            className={cn(
-              navigationMenuTriggerStyle(),
-              isActive("/routes/") && "bg-accent text-accent-foreground"
-            )}
-          >
-            <Link href="/routes/">Routes</Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-
-        <NavigationMenuItem>
+        <NavigationMenuItem className="text-accent-foreground">
           <NavigationMenuTrigger>Organize event</NavigationMenuTrigger>
           <NavigationMenuContent className="absolute min-w-fit z-99">
-              <NavigationMenuLink href="#">
-                <div className="flex text-nowrap gap-2">
-                  <MapPinPlus className="float-left" />
-                  Create new route
-                </div>
-              </NavigationMenuLink>
             <NavigationMenuLink href="#">
               <div className="flex text-nowrap gap-2">
-                <MapPinCheck/>
+                <MapPinPlus className="float-left" />
+                Create new route
+              </div>
+            </NavigationMenuLink>
+            <NavigationMenuLink href="#">
+              <div className="flex text-nowrap gap-2">
+                <MapPinCheck />
                 Use existing route
               </div>
             </NavigationMenuLink>
             <NavigationMenuLink href="#">
               <div className="flex text-nowrap gap-2">
-                <MapPinOff/>
+                <MapPinOff />
                 Non-hiking event
               </div>
             </NavigationMenuLink>
@@ -121,12 +115,13 @@ export default function MainMenu({ isLoggedIn, profilePicture }: MainMenuProps) 
         </NavigationMenuItem>
 
         <div className="flex flex-nowrap gap-4">
-          <SearchBox/>
-          <AuthControl isLoggedIn={isLoggedIn} profilePicture={profilePicture} />
+          <SearchBox />
+          <AuthControl
+            isLoggedIn={isLoggedIn}
+            profilePicture={profilePicture}
+          />
         </div>
-
       </NavigationMenuList>
     </NavigationMenu>
   );
 }
-
