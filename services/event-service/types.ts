@@ -3,8 +3,8 @@ export type Route = {
   name?: string;
   distance?: number;
   elevation_gain?: number;
-  duration?: string;
-  rating?: number;
+  duration?: number; // in minutes
+  rating?: number; // ELO-style rating (800-4000)
   sac_scale?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
 };
 
@@ -37,6 +37,8 @@ export type RouteDetails = Route & {
     name: string;
     elevation: number;
   }[];
+  elevationLost: number;
+  highestPoint: number;
 };
 
 export type User = {

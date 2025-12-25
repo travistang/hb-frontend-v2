@@ -4,111 +4,63 @@ import {
   CartesianGrid,
   Line,
   LineChart,
+  ReferenceLine,
   XAxis,
   YAxis,
   TooltipProps,
+  ReferenceDot,
 } from "recharts";
 
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { RouteDetails } from "@/services/event-service/types";
-import { useElevationChartData } from "./hooks/use-elevation-chart-data";
-
-const CustomTooltip = ({
-  active,
-  payload,
-  label,
-}: TooltipProps<number, string>) => {
-  if (!active || !payload || !payload.length) {
-    return null;
-  }
-
-  // Find the first non-null elevation value
-  const elevationEntry = payload.find((entry) => entry.value !== null);
-  if (!elevationEntry) {
-    return null;
-  }
-
-  const elevation = elevationEntry.value;
-  const distance = label;
-
-  // Extract SAC scale from the dataKe  y (T0, T1, T2, etc.)
-  const sacScale = elevationEntry.dataKey?.toString().replace("T", "") || "0";
-  const sacLabel = sacScale === "0" ? "Unclassified" : `T${sacScale}`;
-
-  const terrain = elevationEntry.payload?.terrain;
-  const peak = elevationEntry.payload?.peak;
-
-  return (
-    <div className="rounded-lg border bg-background p-2 shadow-sm">
-      <div className="grid grid-cols-2 gap-2">
-        <div className="flex items-center gap-2">
-          <div
-            className="w-4 h-4 rounded-lg"
-            style={{ backgroundColor: `var(--chart-${sacScale})` }}
-          />
-          <span className="text-xs font-bold">{sacLabel}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div
-            className="w-4 h-4 rounded-lg"
-            style={{ backgroundColor: `var(--terrain-${terrain})` }}
-          />
-          <span className="text-xs font-bold">{terrain}</span>
-        </div>
-        <div className="flex flex-col">
-          <span className="text-[0.70rem] uppercase text-muted-foreground">
-            Distance
-          </span>
-          <span className="font-bold text-muted-foreground">
-            {typeof distance === "number"
-              ? `${distance.toFixed(1)} km`
-              : distance}
-          </span>
-        </div>
-        <div className="flex flex-col">
-          <span className="text-[0.70rem] uppercase text-muted-foreground">
-            Elevation
-          </span>
-          <span className="font-bold">
-            {typeof elevation === "number"
-              ? `${Math.round(elevation)} m`
-              : "N/A"}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-};
+import { ElevationChartData } from "./hooks/use-elevation-chart-data";
 
 type Props = {
   routeDetails: RouteDetails;
-  onHoverAtIndex: (index: number) => void;
+  chartDataWithSACScale: ElevationChartData;
+  hoverPointIndex?: number;
+  onHoverAtIndex: (index: number | undefined) => void;
 };
 export default function ElevationChart({
   routeDetails,
+  hoverPointIndex,
+  chartDataWithSACScale,
   onHoverAtIndex,
 }: Props) {
-  const chartDataWithSACScale = useElevationChartData(routeDetails);
+  // Get the data point for the hovered index
+  const hoverDataPoint =
+    hoverPointIndex !== undefined
+      ? chartDataWithSACScale[hoverPointIndex]
+      : null;
+
+  // Find the actual elevation value (could be in any T property)
+  const hoverElevation = hoverDataPoint?.elevation ?? null;
+
   return (
-    <ChartContainer config={{}} className="p-4">
+    <ChartContainer config={{}} className="p-4 max-h-[250px]">
       <LineChart
-        height={280}
         onMouseMove={(event) => {
           if (event.activeTooltipIndex === undefined) {
             return;
           }
           onHoverAtIndex(event.activeTooltipIndex);
         }}
+        onMouseLeave={() => {
+          onHoverAtIndex(undefined);
+        }}
         accessibilityLayer
         data={chartDataWithSACScale}
       >
         <CartesianGrid vertical={false} />
         <XAxis
+          type="number"
           label={{
             value: "Distance (km)",
             position: "insideBottom",
             offset: -5,
           }}
+          min={0}
+          domain={["dataMin", "dataMax"]}
           tickFormatter={(value) => value.toFixed(1)}
           dataKey="distance"
           tickLine={false}
@@ -116,6 +68,7 @@ export default function ElevationChart({
           tickMargin={8}
         />
         <YAxis
+          type="number"
           label={{
             value: "Elevation (m)",
             angle: -90,
@@ -123,7 +76,6 @@ export default function ElevationChart({
             offset: 0,
           }}
         />
-        <ChartTooltip cursor={false} content={<CustomTooltip />} />
         <Line
           isAnimationActive={false}
           dataKey="T0"
@@ -179,6 +131,24 @@ export default function ElevationChart({
           strokeWidth={2}
           dot={false}
           connectNulls={false}
+        />
+        <ReferenceDot
+          fill="var(--chart-0)"
+          r={4}
+          x={hoverDataPoint?.distance ?? -1}
+          y={hoverElevation ?? -1}
+        />
+        <ReferenceLine
+          position="end"
+          strokeDasharray={"3 2"}
+          stroke="var(--chart-0)"
+          x={hoverDataPoint?.distance ?? -1}
+        />
+        <ReferenceLine
+          position="end"
+          strokeDasharray={"3 2"}
+          stroke="var(--chart-0)"
+          y={hoverElevation ?? -1}
         />
       </LineChart>
     </ChartContainer>

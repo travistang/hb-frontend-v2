@@ -1,16 +1,40 @@
 import { RouteDetails, Terrain } from "./types";
 
-// Mock route details data
-export const mockRouteDetails: RouteDetails[] = [
+// Helper function to provide elevation statistics for routes
+function getElevationStats(routeId: number) {
+  // Simple reasonable elevation stats for each route
+  const stats = {
+    1: { elevationLost: 245, highestPoint: 1453 },
+    2: { elevationLost: 320, highestPoint: 1680 },
+    3: { elevationLost: 180, highestPoint: 1200 },
+  };
+
+  return (
+    stats[routeId as keyof typeof stats] || {
+      elevationLost: 200,
+      highestPoint: 1400,
+    }
+  );
+}
+
+// Mock route details data - base routes without calculated stats
+const baseMockRouteDetails = [
   {
     id: 1,
     name: "Jochberg Mountain Trail",
     distance: 8.5,
     elevation_gain: 586, // 1453m - 867m
-    duration: "4 hours",
+    duration: 240, // 4 hours in minutes
+    rating: 1850, // ELO-style rating
     sac_scale: 3,
     peaks: [],
     huts: [],
+    boundingBox: {
+      minLatitude: 47.620994,
+      maxLatitude: 47.660533,
+      minLongitude: 11.349174,
+      maxLongitude: 11.37194,
+    },
     waypoints: [
       { latitude: 47.62189, longitude: 11.349287, elevation: 867.0 },
       {
@@ -2747,6 +2771,14 @@ export const mockRouteDetails: RouteDetails[] = [
     id: 2,
     name: "Alpine Ridge Trail",
     distance: 12.0,
+    duration: 360, // 6 hours in minutes
+    rating: 2100, // ELO-style rating
+    boundingBox: {
+      minLatitude: 46.5,
+      maxLatitude: 46.8,
+      minLongitude: 10.5,
+      maxLongitude: 10.9,
+    },
     elevation_gain: 800,
     duration: "6 hours",
     sac_scale: 3,
@@ -2787,7 +2819,8 @@ export const mockRouteDetails: RouteDetails[] = [
     name: "Forest Valley Loop",
     distance: 6.5,
     elevation_gain: 400,
-    duration: "3 hours",
+    duration: 180, // 3 hours in minutes
+    rating: 1650, // ELO-style rating
     sac_scale: 1,
     peaks: [],
     huts: [],
@@ -2814,3 +2847,12 @@ export const mockRouteDetails: RouteDetails[] = [
     sacScaleSegments: [{ sacScale: 1, start: 0, end: 11 }],
   },
 ];
+
+// Add elevation stats for each route and export the final RouteDetails array
+export const mockRouteDetails: RouteDetails[] = baseMockRouteDetails.map(
+  (route) =>
+    ({
+      ...route,
+      ...getElevationStats(route.id),
+    } as RouteDetails)
+);

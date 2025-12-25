@@ -3,8 +3,13 @@
 import { RouteDetails } from "@/services/event-service/types";
 import { GeoJson, GeoJsonFeature, Map, Point } from "pigeon-maps";
 import { ComponentProps, useMemo } from "react";
+import { buildWaypointKDTree, findClosestWaypointIndex } from "@/lib/gpx";
 
-// Wrapper component that receives pigeon-maps props automatically
+/**
+ * Wrapper of GeoJson that mutates mouse over and exposes latLng under mouse cursor
+ * @param props
+ * @returns
+ */
 function GeoJsonLayer(
   props: ComponentProps<typeof GeoJson> & {
     pixelToLatLng?: (pixel: Point) => Point; // Injected by Map
@@ -48,7 +53,7 @@ function GeoJsonLayer(
 type Props = {
   routeDetails: RouteDetails;
   hoverPointIndex?: number;
-  onHoverAtIndex: (index: number) => void;
+  onHoverAtIndex: (index: number | undefined) => void;
 };
 export const GpxMapView = ({
   routeDetails,
@@ -104,37 +109,64 @@ export const GpxMapView = ({
     };
   }, [routeDetails.waypoints]);
 
+  const waypointKDTree = useMemo(
+    () => buildWaypointKDTree(routeDetails.waypoints),
+    [routeDetails.waypoints]
+  );
+
   return (
     <Map
-      minZoom={9}
+      height={300}
+      minZoom={12}
       animate
       mouseEvents
-      height={400}
       center={center}
       defaultZoom={12}
     >
       <GeoJsonLayer
-        onMouseOver={(geoJsonProps) => console.log({ geoJsonProps })}
-        svgAttributes={{
-          stroke: "blue",
-          strokeWidth: 2,
+        onMouseOver={(args) => {
+          if ("latLng" in args && waypointKDTree) {
+            const { latLng } = args;
+            const closestIndex = findClosestWaypointIndex(
+              waypointKDTree,
+              latLng[1], // longitude
+              latLng[0] // latitude
+            );
+            if (closestIndex !== null) {
+              onHoverAtIndex(closestIndex);
+            }
+          }
+        }}
+        onMouseOut={() => {
+          onHoverAtIndex(undefined);
         }}
       >
         <GeoJsonFeature
-          onClick={(clickProps) => console.log({ clickProps })}
+          svgAttributes={{
+            stroke: "transparent",
+            strokeWidth: 24,
+          }}
           feature={gpxLineFeatures}
         />
-      </GeoJsonLayer>
-      {hoverPointGeoJsonFeature && (
-        <GeoJson
+        <GeoJsonFeature
           svgAttributes={{
-            fill: "var(--chart-3)",
-            r: "8",
+            stroke: "blue",
+            strokeWidth: 2,
           }}
-        >
-          <GeoJsonFeature feature={hoverPointGeoJsonFeature} />
-        </GeoJson>
-      )}
+          feature={gpxLineFeatures}
+        />
+        {hoverPointGeoJsonFeature && (
+          <GeoJsonFeature
+            svgAttributes={{
+              fill: "var(--background)",
+              stroke: "blue",
+              strokeWidth: 4,
+              r: "8",
+            }}
+            feature={hoverPointGeoJsonFeature}
+          />
+        )}
+      </GeoJsonLayer>
     </Map>
   );
 };

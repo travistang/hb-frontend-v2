@@ -2,6 +2,7 @@ import { calculateDistance } from "@/lib/gpx";
 import { RouteDetails, Terrain } from "@/services/event-service/types";
 import { useMemo } from "react";
 
+export type ElevationChartData = ReturnType<typeof useElevationChartData>;
 export const useElevationChartData = (routeDetails: RouteDetails) => {
   const elevationChartData = useMemo(() => {
     const cumulativeDistance = routeDetails.waypoints.reduce<number[]>(
@@ -49,6 +50,7 @@ export const useElevationChartData = (routeDetails: RouteDetails) => {
       T4: null as number | null,
       T5: null as number | null,
       T6: null as number | null,
+      sacScale: null as number | null,
       peak: null as string | null,
       terrain: null as Terrain | null,
     }));
@@ -61,6 +63,7 @@ export const useElevationChartData = (routeDetails: RouteDetails) => {
         (baseData[i] as any)[elevationKey] = elevationChartData[i].elevation;
         // Clear the fallback elevation for classified segments
         baseData[i].T0 = null;
+        baseData[i].sacScale = segment.sacScale;
       }
     }
 
