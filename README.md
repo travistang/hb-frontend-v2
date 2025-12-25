@@ -1,6 +1,6 @@
-# Hiking Buddies Frontend V2
+# Hiking Buddies - Frontend Prototype
 
-A Next.js frontend for Hiking Buddies with server-side authentication and API proxy.
+My imagination of Hiking Buddies' Next.js-based frontend.
 
 ## Prerequisites
 
@@ -47,18 +47,6 @@ npm run dev
 
 Navigate to [http://localhost:3000](http://localhost:3000) to see the app.
 
-## Architecture
-
-### Key Differences from V1
-
-| Feature | V1 | V2 |
-|---------|----|----|
-| **CORS Handling** | External CORS proxy (Docker) | Next.js API routes |
-| **Authentication** | localStorage | HTTP-only cookies |
-| **Sign In** | Dialog popup | Dedicated `/signin` page |
-| **Docker for Dev** | Required | Not required |
-| **Production Build** | Static export (nginx) | Standalone Node.js server |
-
 ### API Routes
 
 All API requests go through Next.js API routes that mirror the hiking-buddies.com endpoints:
@@ -69,7 +57,7 @@ All API requests go through Next.js API routes that mirror the hiking-buddies.co
 - `/api/routes/news_feed/` - Community news feed
 - `/api/me` - Get current user's pk (helper for httpOnly cookie access)
 
-### Authentication Flow
+### Current Prototype Authentication Flow
 
 1. User navigates to `/signin`
 2. Form submits to `/api/routes/login/`
