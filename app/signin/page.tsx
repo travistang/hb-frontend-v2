@@ -21,10 +21,9 @@ export default async function SignInPage() {
       <p className="text-muted-foreground">
         Enter your email and password to sign in to your account.
       </p>
-      <div className="not-prose mt-6 max-w-md">
+      <div className="not-prose mt-6">
         <SignInForm />
       </div>
     </div>
   );
 }
-

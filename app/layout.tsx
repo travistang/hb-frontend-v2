@@ -4,6 +4,7 @@ import "./globals.css";
 import MainMenu from "@/components/layout/main-menu";
 import { getAuthState } from "@/lib/auth";
 import { cookies } from "next/headers";
+import { ReactQueryProvider } from "@/lib/query-client";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -54,15 +55,17 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans">
-          <main className="min-h-screen w-full flex-col items-center justify-center py-10 px-16 bg-white">
-            <MainMenu
-              isLoggedIn={auth.isLoggedIn}
-              profilePicture={profilePicture}
-            />
-            {children}
-          </main>
-        </div>
+        <ReactQueryProvider>
+          <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans">
+            <main className="min-h-screen w-full flex-col items-center justify-center py-10 px-16 bg-white">
+              <MainMenu
+                isLoggedIn={auth.isLoggedIn}
+                profilePicture={profilePicture}
+              />
+              {children}
+            </main>
+          </div>
+        </ReactQueryProvider>
       </body>
     </html>
   );
