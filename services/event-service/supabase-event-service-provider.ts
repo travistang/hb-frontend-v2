@@ -32,7 +32,7 @@ type DatabaseEvent = {
     name?: string;
     distance?: number;
     elevation_gain?: number;
-    duration?: string;
+    duration?: number;
     sac_scale?: number;
   };
 };

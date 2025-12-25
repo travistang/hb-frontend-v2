@@ -2780,7 +2780,6 @@ const baseMockRouteDetails = [
       maxLongitude: 10.9,
     },
     elevation_gain: 800,
-    duration: "6 hours",
     sac_scale: 3,
     peaks: [],
     huts: [],
