@@ -16,7 +16,7 @@ export const EventDatetimeSummary = ({ event }: Props) => {
         "flex justify-center md:mt-0 md:justify-start flex-col items-stretch gap-1"
       )}
     >
-      <div className="flex md:flex-col justify-center md:justify-start">
+      <div className="flex md:flex-col justify-center md:justify-start py-2 md:py-0">
         <div
           className={cn(
             "md:pt-4 md:px-4 text-xl font-medium flex items-center md:justify-between justify-start gap-2 md:gap-1",

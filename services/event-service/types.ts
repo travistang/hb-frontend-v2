@@ -4,6 +4,7 @@ export type Route = {
   distance?: number;
   elevation_gain?: number;
   duration?: string;
+  rating?: number;
   sac_scale?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
 };
 
@@ -17,6 +18,12 @@ export enum Terrain {
 }
 
 export type RouteDetails = Route & {
+  boundingBox: {
+    minLatitude: number;
+    maxLatitude: number;
+    minLongitude: number;
+    maxLongitude: number;
+  };
   waypoints: { latitude: number; longitude: number; elevation: number }[];
   terrainSegments: { type: Terrain; start: number; end: number }[];
   sacScaleSegments: { sacScale: number; start: number; end: number }[];
