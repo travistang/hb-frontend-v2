@@ -11,7 +11,7 @@ import {
 import { mockRouteDetails } from "./mock-route-details";
 
 // Mock data storage (in-memory)
-let mockEvents: EventDetails[] = [
+const mockEvents: EventDetails[] = [
   {
     id: 1,
     routeDetails: mockRouteDetails[0],

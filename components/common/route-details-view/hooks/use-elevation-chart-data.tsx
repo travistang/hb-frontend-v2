@@ -78,7 +78,7 @@ export const useElevationChartData = (routeDetails: RouteDetails) => {
     }
 
     return baseData;
-  }, [routeDetails.sacScaleSegments, elevationChartData]);
+  }, [routeDetails.sacScaleSegments, routeDetails.peaks, elevationChartData]);
 
   return chartDataWithSACScale;
 };

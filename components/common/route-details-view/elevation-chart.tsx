@@ -7,22 +7,18 @@ import {
   ReferenceLine,
   XAxis,
   YAxis,
-  TooltipProps,
   ReferenceDot,
 } from "recharts";
 
-import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
-import { RouteDetails } from "@/services/event-service/types";
+import { ChartContainer } from "@/components/ui/chart";
 import { ElevationChartData } from "./hooks/use-elevation-chart-data";
 
 type Props = {
-  routeDetails: RouteDetails;
   chartDataWithSACScale: ElevationChartData;
   hoverPointIndex?: number;
   onHoverAtIndex: (index: number | undefined) => void;
 };
 export default function ElevationChart({
-  routeDetails,
   hoverPointIndex,
   chartDataWithSACScale,
   onHoverAtIndex,

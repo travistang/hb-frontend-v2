@@ -1,20 +1,11 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { EventDetails } from "@/services/event-service/types";
-import { Eye, List } from "lucide-react";
-import { useState } from "react";
 import { ParticipantListDialog } from "./participant-list-dialog";
+import { PercentageBar } from "@/components/common/percentage-bar";
 
 type Props = {
   event: EventDetails;
@@ -40,7 +31,17 @@ export const ParticipantsList = ({ event, className }: Props) => {
           className
         )}
       >
-        <h6 className="text-xs font-bold">Participants</h6>
+        <div className="flex gap-1 items-center">
+          <h6 className="text-xs font-bold">Participants</h6>
+          <PercentageBar
+            className="flex-1 h-2"
+            value={event.participants.length}
+            maxValue={event.max_participants}
+          />
+          <span className="text-xs">
+            {event.participants.length}/{event.max_participants}
+          </span>
+        </div>
         <div className="flex overflow-hidden items-center gap-1 mb-1">
           {event.participants.slice(0, MAX_AVARTAR_FOR_PREVIEW).map((user) => (
             <Avatar key={user.id} className="h-6 w-6">

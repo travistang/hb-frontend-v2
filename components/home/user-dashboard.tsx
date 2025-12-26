@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { EventCard } from "@/components/event/event-card";
 import {
   EventData,
@@ -13,101 +13,60 @@ import { GalleryDialog } from "@/components/event/gallery-dialog";
 import { mapActivityCodeToName } from "@/components/common/activity-name-mapper";
 import { EventsSection } from "@/components/home/events-section";
 import { UserCard } from "@/components/home/user-card";
-
-const ASSET_BASE_URL = process.env.NEXT_PUBLIC_ASSET_BASE_URL;
-
-function safeAssetUrl(path: unknown) {
-  if (typeof path !== "string" || !path) return "";
-  // API returns "#" as a placeholder for "no image"
-  if (path === "#") return "";
-  if (path.startsWith("http://") || path.startsWith("https://")) return path;
-  return `${ASSET_BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
-}
+import { routes } from "@/lib/routes";
+import { safeAssetUrl } from "@/lib/asset-utils";
+import { useQuery } from "@tanstack/react-query";
 
 export function UserDashboard() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<DashboardResponse | null>(null);
-  const [communityEvents, setCommunityEvents] = useState<NewsFeedEvent[]>([]);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [galleryPictures, setGalleryPictures] = useState<NewsFeedPicture[]>([]);
   const [galleryInitialIndex, setGalleryInitialIndex] = useState(0);
 
-  useEffect(() => {
-    let cancelled = false;
-    const controller = new AbortController();
-
-    async function fetchData() {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        // First get the user's pk from the /api/me endpoint
-        const meResponse = await fetch("/api/me", {
-          signal: controller.signal,
-        });
-        const meData = await meResponse.json();
-
-        if (!meData.authenticated) {
-          setError("Not authenticated. Please sign in.");
-          setIsLoading(false);
-          return;
-        }
-
-        const pk = meData.pk;
-
-        // Fetch dashboard and news feed in parallel
-        const [dashboardResponse, newsFeedResponse] = await Promise.all([
-          fetch(`/api/routes/user_main_page/${pk}/`, {
-            signal: controller.signal,
-          }),
-          fetch("/api/routes/news_feed/", { signal: controller.signal }),
-        ]);
-
-        if (
-          dashboardResponse.status === 401 ||
-          newsFeedResponse.status === 401
-        ) {
-          throw new Error("Your session expired. Please sign in again.");
-        }
-
-        if (!dashboardResponse.ok) {
-          throw new Error("Failed to load dashboard. Please try again later.");
-        }
-
-        const dashboardJson: DashboardResponse = await dashboardResponse.json();
-        if (!cancelled) {
-          setData(dashboardJson);
-        }
-
-        if (newsFeedResponse.ok) {
-          const newsFeedJson: NewsFeedResponse = await newsFeedResponse.json();
-          if (!cancelled) {
-            setCommunityEvents(newsFeedJson?.results ?? []);
-          }
-        }
-      } catch (e: unknown) {
-        if (cancelled) return;
-        if (e instanceof Error && e.name === "AbortError") return;
-        setError(
-          e instanceof Error
-            ? e.message
-            : "Failed to load data. Please try again later."
-        );
-      } finally {
-        if (!cancelled) {
-          setIsLoading(false);
-        }
+  // Fetch dashboard data
+  const {
+    data: dashboardData,
+    isLoading: isDashboardLoading,
+    error: dashboardError,
+  } = useQuery({
+    queryKey: ["dashboard"],
+    queryFn: async (): Promise<DashboardResponse> => {
+      const response = await fetch(routes.api.dashboard);
+      if (response.status === 401) {
+        throw new Error("Your session expired. Please sign in again.");
       }
-    }
+      if (!response.ok) {
+        throw new Error("Failed to load dashboard. Please try again later.");
+      }
+      return response.json();
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
-    fetchData();
+  // Fetch news feed data
+  const {
+    data: newsFeedData,
+    isLoading: isNewsFeedLoading,
+    error: newsFeedError,
+  } = useQuery({
+    queryKey: ["news-feed"],
+    queryFn: async (): Promise<NewsFeedResponse> => {
+      const response = await fetch(routes.api.events.newsFeed);
+      if (response.status === 401) {
+        throw new Error("Your session expired. Please sign in again.");
+      }
+      if (!response.ok) {
+        throw new Error("Failed to load news feed. Please try again later.");
+      }
+      return response.json();
+    },
+    staleTime: 2 * 60 * 1000, // 2 minutes
+  });
 
-    return () => {
-      cancelled = true;
-      controller.abort();
-    };
-  }, []);
+  // Combine loading and error states
+  const isLoading = isDashboardLoading || isNewsFeedLoading;
+  const error = dashboardError?.message || newsFeedError?.message || null;
+  const data = dashboardData || null;
+  const communityEvents = newsFeedData?.results ?? [];
 
   const handleOpenGallery = (
     pictures: NewsFeedPicture[],

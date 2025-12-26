@@ -15,8 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SacScaleBadge } from "@/components/common/sac-scale-badge";
 import { EventCardProps, NewsFeedPicture } from "./types";
 import { useRouter } from "next/navigation";
-
-const ASSET_BASE_URL = process.env.NEXT_PUBLIC_ASSET_BASE_URL;
+import { safeAssetUrl } from "@/lib/asset-utils";
 
 function formatStart(value: unknown) {
   if (typeof value !== "string") return null;
@@ -38,14 +37,6 @@ function formatTime(date: Date) {
     hour: "2-digit",
     minute: "2-digit",
   }).format(date);
-}
-
-function safeAssetUrl(path: unknown) {
-  if (typeof path !== "string" || !path) return "";
-  // API returns "#" as a placeholder for "no image"
-  if (path === "#") return "";
-  if (path.startsWith("http://") || path.startsWith("https://")) return path;
-  return `${ASSET_BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
 }
 
 export function EventCard({
@@ -73,12 +64,8 @@ export function EventCard({
   const route = event?.route;
 
   // Standard variant: single cover image
-  const cover =
-    variant === "standard" ? safeAssetUrl(event?.cover_picture_url) : null;
   const coverSrc =
-    cover && cover !== `${ASSET_BASE_URL}#` && cover !== `${ASSET_BASE_URL}/#`
-      ? cover
-      : "";
+    variant === "standard" ? safeAssetUrl(event?.cover_picture_url) : "";
 
   // Community variant: gallery of pictures
   const pictures =

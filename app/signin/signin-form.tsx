@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { routes } from "@/lib/routes";
 
 export function SignInForm() {
   const router = useRouter();
@@ -18,7 +19,7 @@ export function SignInForm() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/routes/login/", {
+      const response = await fetch(routes.api.auth.login, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -101,4 +102,3 @@ export function SignInForm() {
     </div>
   );
 }
-

@@ -38,7 +38,6 @@ export const RouteDetailsView = ({ routeDetails, className }: Props) => {
         className="flex-1 flex flex-col items-stretch w-full"
       >
         <ElevationChart
-          routeDetails={routeDetails}
           hoverPointIndex={hoverPointIndex}
           chartDataWithSACScale={chartDataWithSACScale}
           onHoverAtIndex={setHoverPointIndex}
