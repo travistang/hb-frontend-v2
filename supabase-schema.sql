@@ -17,11 +17,11 @@ CREATE TABLE IF NOT EXISTS routes (
     id SERIAL PRIMARY KEY,
     name TEXT,
     distance NUMERIC(10, 2),
-    elevation_gain NUMERIC(10, 2),
+    elevationGain NUMERIC(10, 2),
     duration TEXT,
-    sac_scale INTEGER CHECK (
-        sac_scale >= 0
-        AND sac_scale <= 6
+    sacScale INTEGER CHECK (
+        sacScale >= 0
+        AND sacScale <= 6
     ),
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()

@@ -4,10 +4,9 @@ import {
   EventDetails,
   EventServiceProvider,
   NewsFeedPicture,
-  Route,
-  RouteDetails,
   User,
 } from "./types";
+import { Route, RouteDetails } from "../route-service/types";
 import { mockRouteDetails } from "./mock-route-details";
 
 // Mock data storage (in-memory)
@@ -83,9 +82,9 @@ const mockEvents: EventDetails[] = [
       id: 1,
       name: "Mount Peak Trail",
       distance: 9.7,
-      elevation_gain: 1200,
+      elevationGain: 1200,
       duration: 240,
-      sac_scale: 2,
+      sacScale: 2,
     },
     cover_picture_url: "/events/mount-peak.jpg",
     num_of_days: 1,
@@ -205,9 +204,9 @@ const mockEvents: EventDetails[] = [
       id: 2,
       name: "Mountain Loop Trail",
       distance: 12.0,
-      elevation_gain: 800,
+      elevationGain: 800,
       duration: 360,
-      sac_scale: 1,
+      sacScale: 1,
     },
     cover_picture_url: "/events/camping.jpg",
     num_of_days: 2,
@@ -221,14 +220,10 @@ let nextId = 3;
 
 export class MockedEventServiceProvider implements EventServiceProvider {
   async getEvents(): Promise<Event[]> {
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 100));
     return [...mockEvents];
   }
 
   async getEvent(id: number): Promise<EventDetails | null> {
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 50));
     const event = mockEvents.find((e) => e.id === id);
     if (!event) {
       return null;
@@ -238,9 +233,7 @@ export class MockedEventServiceProvider implements EventServiceProvider {
 
   async createEvent(
     event: Omit<Event, "id" | "created_at" | "updated_at">
-  ): Promise<Event> {
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 150));
+  ): Promise<EventDetails> {
     const now = new Date().toISOString();
     const newEvent: Event = {
       ...event,
@@ -271,8 +264,6 @@ export class MockedEventServiceProvider implements EventServiceProvider {
     id: number,
     event: Partial<Omit<Event, "id" | "created_at" | "updated_at">>
   ): Promise<Event> {
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 100));
     const index = mockEvents.findIndex((e) => e.id === id);
     if (index === -1) {
       throw new Error(`Event with id ${id} not found`);
@@ -288,8 +279,6 @@ export class MockedEventServiceProvider implements EventServiceProvider {
   }
 
   async deleteEvent(id: number): Promise<void> {
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 80));
     const index = mockEvents.findIndex((e) => e.id === id);
     if (index === -1) {
       throw new Error(`Event with id ${id} not found`);
@@ -298,14 +287,10 @@ export class MockedEventServiceProvider implements EventServiceProvider {
   }
 
   async getRouteDetails(routeId: number): Promise<RouteDetails | null> {
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 50));
     return mockRouteDetails.find((route) => route.id === routeId) || null;
   }
 
   async getRouteDetailsList(): Promise<RouteDetails[]> {
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 100));
     return [...mockRouteDetails];
   }
 }

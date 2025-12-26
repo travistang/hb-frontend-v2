@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Terrain } from "@/services/event-service/types";
+import { Terrain } from "@/services/route-service/types";
 import { InfoIcon } from "lucide-react";
 
 const HoverPointInfoItem = ({

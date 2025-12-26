@@ -1,6 +1,6 @@
 "use client";
 
-import { RouteDetails } from "@/services/event-service/types";
+import { RouteDetails } from "@/services/route-service/types";
 import { GeoJson, GeoJsonFeature, Map, Point } from "pigeon-maps";
 import { ComponentProps, useMemo } from "react";
 import { buildWaypointKDTree, findClosestWaypointIndex } from "@/lib/gpx";

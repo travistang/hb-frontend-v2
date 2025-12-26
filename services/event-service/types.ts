@@ -1,45 +1,4 @@
-export type Route = {
-  id: number;
-  name?: string;
-  distance?: number;
-  elevation_gain?: number;
-  duration?: number; // in minutes
-  rating?: number; // ELO-style rating (800-4000)
-  sac_scale?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
-};
-
-// TODO: subject to change once clear
-export enum Terrain {
-  Gravel = "gravel",
-  Dirt = "dirt",
-  Grass = "grass",
-  Pavement = "pavement",
-  Snow = "snow",
-}
-
-export type RouteDetails = Route & {
-  boundingBox: {
-    minLatitude: number;
-    maxLatitude: number;
-    minLongitude: number;
-    maxLongitude: number;
-  };
-  waypoints: { latitude: number; longitude: number; elevation: number }[];
-  terrainSegments: { type: Terrain; start: number; end: number }[];
-  sacScaleSegments: { sacScale: number; start: number; end: number }[];
-  peaks: {
-    index: number;
-    name: string;
-    elevation: number;
-  }[];
-  huts: {
-    index: number;
-    name: string;
-    elevation: number;
-  }[];
-  elevationLost: number;
-  highestPoint: number;
-};
+import { Route, RouteDetails, Terrain } from "../route-service/types";
 
 export type User = {
   id: number;
@@ -89,9 +48,8 @@ export type Event = {
   route_id?: number;
 };
 
-export type EventDetails = Event & {
+export type EventDetails = Omit<Event, "route"> & {
   organizer: User;
-  route: Route;
   routeDetails: RouteDetails;
   participants: User[];
   waitingList: User[];

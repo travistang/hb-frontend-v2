@@ -1,5 +1,5 @@
 import { calculateDistance } from "@/lib/gpx";
-import { RouteDetails, Terrain } from "@/services/event-service/types";
+import { RouteDetails, Terrain } from "@/services/route-service/types";
 import { useMemo } from "react";
 
 export type ElevationChartData = ReturnType<typeof useElevationChartData>;

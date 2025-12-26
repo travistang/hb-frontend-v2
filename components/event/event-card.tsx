@@ -185,10 +185,10 @@ export function EventCard({
                     {route.distance} km
                   </Badge>
                 ) : null}
-                {route?.elevation_gain != null ? (
+                {route?.elevationGain != null ? (
                   <Badge variant="outline" className="flex items-center gap-1">
                     <Triangle className="h-3 w-3" />
-                    {route.elevation_gain} m
+                    {route.elevationGain} m
                   </Badge>
                 ) : null}
                 {route?.duration ? (
@@ -197,7 +197,7 @@ export function EventCard({
                     {route.duration}
                   </Badge>
                 ) : null}
-                <SacScaleBadge value={route?.sac_scale} />
+                <SacScaleBadge value={route?.sacScale} />
               </div>
             )}
 

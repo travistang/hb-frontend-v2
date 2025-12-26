@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { RouteDetails } from "@/services/event-service/types";
+import { RouteDetails } from "@/services/route-service/types";
 import { useState } from "react";
 import ElevationChart from "./elevation-chart";
 import { GpxMapView } from "./gpx-map-view";

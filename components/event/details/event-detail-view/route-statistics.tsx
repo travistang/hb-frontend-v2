@@ -1,6 +1,6 @@
 "use client";
 
-import { RouteDetails } from "@/services/event-service/types";
+import { RouteDetails } from "@/services/route-service/types";
 import { formatDuration, intervalToDuration } from "date-fns";
 import {
   Mountain,
@@ -91,7 +91,7 @@ export const RouteStatistics = ({
       <StatItem
         icon={Mountain}
         label="Elevation Gain"
-        value={routeDetails.elevation_gain || 0}
+        value={routeDetails.elevationGain || 0}
         unit="m"
       />
       <StatItem

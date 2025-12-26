@@ -425,7 +425,7 @@ components:
           type: number
           format: float
           description: Distance in kilometers
-        elevation_gain:
+        elevationGain:
           type: number
           format: float
           description: Elevation gain in meters
@@ -439,7 +439,7 @@ components:
           description: ELO-style rating (800-4000)
           minimum: 800
           maximum: 4000
-        sac_scale:
+        sacScale:
           type: integer
           enum: [0, 1, 2, 3, 4, 5, 6]
           description: SAC hiking difficulty scale
@@ -465,16 +465,16 @@ components:
     BoundingBox:
       type: object
       properties:
-        minLatitude:
+        minLat:
           type: number
           format: float
-        maxLatitude:
+        maxLat:
           type: number
           format: float
-        minLongitude:
+        minLng:
           type: number
           format: float
-        maxLongitude:
+        maxLng:
           type: number
           format: float
 

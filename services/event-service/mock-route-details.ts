@@ -1,4 +1,5 @@
-import { RouteDetails, Terrain } from "./types";
+import { RouteDetails } from "../route-service/types";
+import { Terrain } from "../route-service/types";
 
 // Helper function to provide elevation statistics for routes
 function getElevationStats(routeId: number) {
@@ -23,17 +24,17 @@ const baseMockRouteDetails = [
     id: 1,
     name: "Jochberg Mountain Trail",
     distance: 8.5,
-    elevation_gain: 586, // 1453m - 867m
+    elevationGain: 586, // 1453m - 867m
     duration: 240, // 4 hours in minutes
     rating: 1850, // ELO-style rating
-    sac_scale: 3,
+    sacScale: 3,
     peaks: [],
     huts: [],
     boundingBox: {
-      minLatitude: 47.620994,
-      maxLatitude: 47.660533,
-      minLongitude: 11.349174,
-      maxLongitude: 11.37194,
+      minLat: 47.620994,
+      maxLat: 47.660533,
+      minLng: 11.349174,
+      maxLng: 11.37194,
     },
     waypoints: [
       { latitude: 47.62189, longitude: 11.349287, elevation: 867.0 },
@@ -2774,13 +2775,13 @@ const baseMockRouteDetails = [
     duration: 360, // 6 hours in minutes
     rating: 2100, // ELO-style rating
     boundingBox: {
-      minLatitude: 46.5,
-      maxLatitude: 46.8,
-      minLongitude: 10.5,
-      maxLongitude: 10.9,
+      minLat: 46.5,
+      maxLat: 46.8,
+      minLng: 10.5,
+      maxLng: 10.9,
     },
-    elevation_gain: 800,
-    sac_scale: 3,
+    elevationGain: 800,
+    sacScale: 3,
     peaks: [],
     huts: [],
     waypoints: [
@@ -2817,10 +2818,10 @@ const baseMockRouteDetails = [
     id: 3,
     name: "Forest Valley Loop",
     distance: 6.5,
-    elevation_gain: 400,
+    elevationGain: 400,
     duration: 180, // 3 hours in minutes
     rating: 1650, // ELO-style rating
-    sac_scale: 1,
+    sacScale: 1,
     peaks: [],
     huts: [],
     waypoints: [

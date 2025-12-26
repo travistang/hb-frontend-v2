@@ -34,8 +34,8 @@ export default function EventDetailView({ event }: Props) {
             <h2 className="text-2xl font-bold">{event.title}</h2>
             <SacScaleBadge
               value={
-                event.routeDetails.sac_scale
-                  ? `T${event.routeDetails.sac_scale}`
+                event.routeDetails.sacScale
+                  ? `T${event.routeDetails.sacScale}`
                   : "T0"
               }
             />

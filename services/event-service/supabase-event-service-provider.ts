@@ -31,9 +31,9 @@ type DatabaseEvent = {
     id: number;
     name?: string;
     distance?: number;
-    elevation_gain?: number;
+    elevationGain?: number;
     duration?: number;
-    sac_scale?: number;
+    sacScale?: number;
   };
 };
 
@@ -94,9 +94,9 @@ export class SupabaseEventServiceProvider implements EventServiceProvider {
             id: dbEvent.route.id,
             name: dbEvent.route.name,
             distance: dbEvent.route.distance,
-            elevation_gain: dbEvent.route.elevation_gain,
+            elevationGain: dbEvent.route.elevationGain,
             duration: dbEvent.route.duration,
-            sac_scale: dbEvent.route.sac_scale as
+            sacScale: dbEvent.route.sacScale as
               | 0
               | 1
               | 2
@@ -226,9 +226,9 @@ export class SupabaseEventServiceProvider implements EventServiceProvider {
           id,
           name,
           distance,
-          elevation_gain,
+          elevationGain,
           duration,
-          sac_scale
+          sacScale
         )
       `
       )
@@ -275,9 +275,9 @@ export class SupabaseEventServiceProvider implements EventServiceProvider {
     //       id,
     //       name,
     //       distance,
-    //       elevation_gain,
+    //       elevationGain,
     //       duration,
-    //       sac_scale
+    //       sacScale
     //     )
     //   `
     //   )
@@ -363,9 +363,9 @@ export class SupabaseEventServiceProvider implements EventServiceProvider {
           id,
           name,
           distance,
-          elevation_gain,
+          elevationGain,
           duration,
-          sac_scale
+          sacScale
         )
       `
       )
@@ -448,9 +448,9 @@ export class SupabaseEventServiceProvider implements EventServiceProvider {
           id,
           name,
           distance,
-          elevation_gain,
+          elevationGain,
           duration,
-          sac_scale
+          sacScale
         )
       `
       )

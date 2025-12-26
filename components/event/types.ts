@@ -22,9 +22,9 @@ export type EventData = {
   };
   route?: {
     distance?: number;
-    elevation_gain?: number;
+    elevationGain?: number;
     duration?: string;
-    sac_scale?: string | number;
+    sacScale?: string | number;
   };
   cover_picture_url?: string;
   pictures_uploaded?: NewsFeedPicture[];
