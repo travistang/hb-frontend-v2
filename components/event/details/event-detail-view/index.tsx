@@ -59,7 +59,7 @@ export default function EventDetailView({ event }: Props) {
       <div className="p-4 flex items-center">
         <RouteStatistics className="w-full" routeDetails={event.routeDetails} />
       </div>
-      <div className="p-4 flex items-center">
+      <div className="md:p-4 flex items-center">
         <RouteDetailsView routeDetails={event.routeDetails} />
       </div>
       <div data-testid="event-content" className="flex-1 flex-col px-4 pt-2">

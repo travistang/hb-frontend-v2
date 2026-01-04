@@ -94,7 +94,10 @@ export default function RoutesPage() {
         )}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {showLoadingPlaceholder ? (
-            <LoadingPlaceholder label="Loading routes..." />
+            <LoadingPlaceholder
+              className="col-span-full"
+              label="Loading routes..."
+            />
           ) : (
             data?.routes?.map((route) => (
               <RouteCard key={route.id} route={route} />

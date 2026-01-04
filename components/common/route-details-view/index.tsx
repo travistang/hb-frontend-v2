@@ -22,7 +22,7 @@ export const RouteDetailsView = ({ routeDetails, className }: Props) => {
     <div
       data-testid="route-details-view"
       className={cn(
-        "flex flex-col md:flex-row overflow-hidden w-full rounded-lg shadow grow-0 shrink-0",
+        "flex flex-col md:flex-row overflow-hidden w-full md:rounded-lg md:shadow grow-0 shrink-0",
         className
       )}
     >
