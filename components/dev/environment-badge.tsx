@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { Badge } from "../ui/badge";
 
 type RecognizedEnvironment = "staging" | "local" | "preview" | "production";
 const environmentConfig: Partial<
