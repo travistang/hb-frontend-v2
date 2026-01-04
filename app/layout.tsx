@@ -4,6 +4,7 @@ import "./globals.css";
 import MainMenu from "@/components/layout/main-menu";
 import { ReactQueryProvider } from "@/lib/query-client";
 import userService from "@/services/user-service";
+import { EnvironmentBadge } from "@/components/dev/environment-badge";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -53,6 +54,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ReactQueryProvider>
+          <EnvironmentBadge />
           <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans">
             <main className="min-h-screen w-full flex-col items-center justify-center py-10 px-16 bg-white">
               <MainMenu
