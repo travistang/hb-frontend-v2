@@ -6,7 +6,7 @@ import {
   NewsFeedPicture,
   User,
 } from "./types";
-import { Route, RouteDetails } from "../route-service/types";
+import { RouteDetails } from "../route-service/types";
 import { mockRouteDetails } from "./mock-route-details";
 
 // Mock data storage (in-memory)
@@ -16,10 +16,10 @@ const mockEvents: EventDetails[] = [
     routeDetails: mockRouteDetails[0],
     title: "Sunrise Hike to Mount Peak",
     description: "Join us for an early morning hike to catch the sunrise",
-    start: "2024-12-25T06:00:00Z",
+    start: "2025-01-15T06:00:00Z",
     meeting_point: "Trailhead parking lot",
-    city: "San Francisco",
-    activity: "hiking",
+    city: { name: "San Francisco", coordinates: [37.7749, -122.4194] },
+    activity: "HI",
     activity_name: "Hiking",
     participants: [
       {
@@ -77,15 +77,29 @@ const mockEvents: EventDetails[] = [
       spaces: 10,
       waiting: 0,
     },
-    pictures_uploaded: [],
-    route: {
-      id: 1,
-      name: "Mount Peak Trail",
-      distance: 9.7,
-      elevationGain: 1200,
-      duration: 240,
-      sacScale: 2,
-    },
+    pictures_uploaded: [
+      {
+        id: 101,
+        thumb: "https://picsum.photos/seed/hike1/200/150",
+        url: "https://picsum.photos/seed/hike1/800/600",
+        uploaded_at: "2025-01-10T14:30:00Z",
+        owner: "John Doe",
+      },
+      {
+        id: 102,
+        thumb: "https://picsum.photos/seed/hike2/200/150",
+        url: "https://picsum.photos/seed/hike2/800/600",
+        uploaded_at: "2025-01-10T15:45:00Z",
+        owner: "Patrick Patrick",
+      },
+      {
+        id: 103,
+        thumb: "https://picsum.photos/seed/hike3/200/150",
+        url: "https://picsum.photos/seed/hike3/800/600",
+        uploaded_at: "2025-01-10T16:20:00Z",
+        owner: "Alex Smith",
+      },
+    ],
     cover_picture_url: "/events/mount-peak.jpg",
     num_of_days: 1,
     max_participants: 15,
@@ -97,10 +111,10 @@ const mockEvents: EventDetails[] = [
     routeDetails: mockRouteDetails[1],
     title: "Weekend Camping Trip",
     description: "Two-day camping adventure in the mountains",
-    start: "2024-12-30T08:00:00Z",
+    start: "2025-01-25T08:00:00Z",
     meeting_point: "Main campground entrance",
-    city: "Lake Tahoe",
-    activity: "camping",
+    city: { name: "Lake Tahoe", coordinates: [39.0968, -120.0324] },
+    activity: "HI",
     activity_name: "Camping",
     waitingList: [
       {
@@ -200,14 +214,6 @@ const mockEvents: EventDetails[] = [
       spaces: 7,
       waiting: 2,
     },
-    route: {
-      id: 2,
-      name: "Mountain Loop Trail",
-      distance: 12.0,
-      elevationGain: 800,
-      duration: 360,
-      sacScale: 1,
-    },
     cover_picture_url: "/events/camping.jpg",
     num_of_days: 2,
     max_participants: 15,
@@ -223,6 +229,10 @@ export class MockedEventServiceProvider implements EventServiceProvider {
     return [...mockEvents];
   }
 
+  async getEventDetails(): Promise<EventDetails[]> {
+    return [...mockEvents];
+  }
+
   async getEvent(id: number): Promise<EventDetails | null> {
     const event = mockEvents.find((e) => e.id === id);
     if (!event) {
@@ -235,29 +245,40 @@ export class MockedEventServiceProvider implements EventServiceProvider {
     event: Omit<Event, "id" | "created_at" | "updated_at">
   ): Promise<EventDetails> {
     const now = new Date().toISOString();
-    const newEvent: Event = {
-      ...event,
-      id: nextId++,
+    const newEventId = nextId++;
+    const routeDetails = event.route
+      ? (mockRouteDetails.find(
+          (route) => route.id === event.route?.id
+        ) as RouteDetails)
+      : mockRouteDetails[0];
+
+    const newEventDetails: EventDetails = {
+      id: newEventId,
+      title: event.title,
+      description: event.description,
+      start: event.start,
+      meeting_point: event.meeting_point,
+      city: event.city,
+      activity: event.activity,
+      activity_name: event.activity_name,
+      cover_picture_url: event.cover_picture_url,
+      organizer: (event.organizer as User) || mockEvents[0].organizer,
+      participants: [],
+      waitingList: [],
+      routeDetails: routeDetails,
+      attendance: (event.attendance as Attendance) || {
+        going: 0,
+        spaces: 10,
+        waiting: 0,
+      },
+      pictures_uploaded: (event.pictures_uploaded as NewsFeedPicture[]) || [],
+      num_of_days: (event.num_of_days as number) || 1,
+      max_participants: (event.max_participants as number) || 10,
       created_at: now,
       updated_at: now,
     };
-    mockEvents.push({
-      ...newEvent,
-      organizer: newEvent.organizer as User,
-      route: newEvent.route as Route,
-      participants: [],
-      waitingList: [],
-      routeDetails: mockRouteDetails.find(
-        (route) => route.id === newEvent.route?.id
-      ) as RouteDetails,
-      attendance: newEvent.attendance as Attendance,
-      pictures_uploaded: newEvent.pictures_uploaded as NewsFeedPicture[],
-      num_of_days: newEvent.num_of_days as number,
-      max_participants: newEvent.max_participants as number,
-      created_at: newEvent.created_at as string,
-      updated_at: newEvent.updated_at as string,
-    });
-    return { ...newEvent };
+    mockEvents.push(newEventDetails);
+    return newEventDetails;
   }
 
   async updateEvent(

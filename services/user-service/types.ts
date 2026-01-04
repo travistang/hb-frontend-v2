@@ -12,6 +12,7 @@ export type User = {
 };
 
 export interface UserServiceProvider {
+  authenticated(): Promise<boolean>;
   getMe(): Promise<User | null>;
   login(username: string, password: string): Promise<boolean>;
   logout(): Promise<void>;

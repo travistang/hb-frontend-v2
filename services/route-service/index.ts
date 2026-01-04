@@ -1,7 +1,7 @@
+import HBRouteServiceProvider from "./hb-route-service-provider";
 import { MockedRouteServiceProvider } from "./mocked-route-service-provider";
 
 export * from "./types";
 export { MockedRouteServiceProvider };
 
-// Default export: the mocked provider instance
-export default new MockedRouteServiceProvider();
+export default HBRouteServiceProvider;

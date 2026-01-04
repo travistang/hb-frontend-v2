@@ -16,6 +16,7 @@ import { SacScaleBadge } from "@/components/common/sac-scale-badge";
 import { EventCardProps, NewsFeedPicture } from "./types";
 import { useRouter } from "next/navigation";
 import { safeAssetUrl } from "@/lib/asset-utils";
+import { routes } from "@/lib/routes";
 
 function formatStart(value: unknown) {
   if (typeof value !== "string") return null;
@@ -46,7 +47,7 @@ export function EventCard({
 }: EventCardProps) {
   const router = useRouter();
   const handleClick = () => {
-    router.push(`/events/${event.id}`);
+    router.push(routes.pages.eventDetail(event.id));
   };
   const title = event?.title ?? "Untitled";
   const startDate = formatStart(event?.start);
@@ -223,7 +224,10 @@ export function EventCard({
                         key={pic.id ?? pic.url}
                         type="button"
                         className="relative h-20 w-28 shrink-0 overflow-hidden rounded-md border bg-muted cursor-pointer"
-                        onClick={() => onOpenGallery(pictures, index)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onOpenGallery(pictures, index);
+                        }}
                       >
                         {thumbSrc ? (
                           <Image

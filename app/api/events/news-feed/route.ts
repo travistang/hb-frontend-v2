@@ -1,17 +1,16 @@
+import constants from "@/services/user-service/constants";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-const API_BASE_URL = process.env.API_BASE_URL || "https://www.hiking-buddies.com";
+const API_BASE_URL =
+  process.env.API_BASE_URL || "https://www.hiking-buddies.com";
 
 export async function GET() {
   const cookieStore = await cookies();
-  const authToken = cookieStore.get("authToken")?.value;
+  const authToken = cookieStore.get(constants.cookies.authToken)?.value;
 
   if (!authToken) {
-    return NextResponse.json(
-      { error: "Not authenticated" },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
   try {
@@ -46,4 +45,3 @@ export async function GET() {
     );
   }
 }
-

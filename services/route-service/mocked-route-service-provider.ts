@@ -2,7 +2,7 @@ import {
   CreateRouteParams,
   Route,
   RouteDetails,
-  RouteSearchProvider,
+  RouteServiceProvider,
   RouteSearchQuery,
   RouteSearchResults,
   UpdateRouteParams,
@@ -146,8 +146,8 @@ function toRoute(routeDetails: RouteDetails): Route {
   };
 }
 
-export class MockedRouteServiceProvider implements RouteSearchProvider {
-  async search(query: RouteSearchQuery): Promise<RouteSearchResults> {
+export class MockedRouteServiceProvider implements RouteServiceProvider {
+  async search(query: RouteSearchQuery = {}): Promise<RouteSearchResults> {
     // Filter routes based on query
     const filteredRoutes = routes.filter((route) => matchesQuery(route, query));
 
@@ -157,6 +157,8 @@ export class MockedRouteServiceProvider implements RouteSearchProvider {
     // For now, return the first route as the result (simplified implementation)
     // In a real implementation, this would include clustering logic
     return {
+      next: null,
+      previous: null,
       clusters: [],
       routes:
         sortedRoutes.length > 0 ? toRoute(sortedRoutes[0]) : toRoute(routes[0]),

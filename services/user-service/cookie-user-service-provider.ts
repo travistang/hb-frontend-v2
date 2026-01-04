@@ -1,13 +1,26 @@
 import { cookies } from "next/headers";
 import { User, UserServiceProvider } from "./types";
+import constants from "./constants";
 
 export class CookieUserServiceProvider implements UserServiceProvider {
+  async authenticated(): Promise<boolean> {
+    const cookieStore = await cookies();
+    const authToken = cookieStore.get(constants.cookies.authToken)?.value;
+    return Boolean(authToken);
+  }
+
   async getMe(): Promise<User | null> {
+    if (!this.authenticated()) {
+      return null;
+    }
+
     try {
       const cookieStore = await cookies();
-      const pk = cookieStore.get("pk")?.value;
-      const username = cookieStore.get("username")?.value;
-      const profilePicture = cookieStore.get("profilePicture")?.value;
+      const pk = cookieStore.get(constants.cookies.pk)?.value;
+      const username = cookieStore.get(constants.cookies.username)?.value;
+      const profilePicture = cookieStore.get(
+        constants.cookies.profilePicture
+      )?.value;
 
       if (!pk || !username) {
         return null;
@@ -54,7 +67,7 @@ export class CookieUserServiceProvider implements UserServiceProvider {
       // Set cookies in the current request context
       const cookieStore = await cookies();
 
-      cookieStore.set("authToken", data.token, {
+      cookieStore.set(constants.cookies.authToken, data.token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
@@ -62,7 +75,7 @@ export class CookieUserServiceProvider implements UserServiceProvider {
         maxAge: 60 * 60 * 24 * 7, // 7 days
       });
 
-      cookieStore.set("pk", data.pk.toString(), {
+      cookieStore.set(constants.cookies.pk, data.pk.toString(), {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
@@ -70,7 +83,7 @@ export class CookieUserServiceProvider implements UserServiceProvider {
         maxAge: 60 * 60 * 24 * 7, // 7 days
       });
 
-      cookieStore.set("username", data.username, {
+      cookieStore.set(constants.cookies.username, data.username, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
@@ -90,10 +103,10 @@ export class CookieUserServiceProvider implements UserServiceProvider {
       const cookieStore = await cookies();
 
       // Clear all auth cookies
-      cookieStore.delete("authToken");
-      cookieStore.delete("pk");
-      cookieStore.delete("username");
-      cookieStore.delete("profilePicture");
+      cookieStore.delete(constants.cookies.authToken);
+      cookieStore.delete(constants.cookies.pk);
+      cookieStore.delete(constants.cookies.username);
+      cookieStore.delete(constants.cookies.profilePicture);
     } catch (error) {
       console.error("Error clearing cookies:", error);
     }

@@ -14,12 +14,22 @@ export const routes = {
       detail: (id: string | number) => `/api/events/${id}`,
       newsFeed: "/api/events/news-feed",
     },
+
+    routes: {
+      search: "/api/routes",
+      create: "/api/routes",
+      detail: (id: string | number) => `/api/routes/${id}`,
+      update: (id: string | number) => `/api/routes/${id}`,
+      delete: (id: string | number) => `/api/routes/${id}`,
+    },
   },
 
   pages: {
     home: "/",
     events: "/events",
+    routes: "/routes",
     eventDetail: (id: string | number) => `/events/${id}`,
+    routeDetail: (id: string | number) => `/routes/${id}`,
     signin: "/signin",
   },
 } as const;

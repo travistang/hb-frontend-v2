@@ -1,3 +1,10 @@
+import z from "zod";
+import {
+  hbRouteResponseSchema,
+  hbRouteSearchQuerySchema,
+  hbRouteSearchReponseSchema,
+} from "./validator";
+
 export type BoundingBox = {
   minLat: number;
   maxLat: number;
@@ -15,6 +22,8 @@ export type Route = {
   rating: number;
   duration: number; // in minutes
   sacScale: SACScale;
+  maxHeight: number;
+  gpx: string; // TODO: maybe we can just parse this GPX string from backend and give frontend all waypoints instead
   images: { url: string; filename: string }[];
 };
 
@@ -83,12 +92,21 @@ export type RouteSearchResultCluster = {
   count: number;
 };
 export type RouteSearchResults = {
+  count: number;
+  next: string | null;
+  previous: string | null;
   clusters: RouteSearchResultCluster[];
-  routes: Route;
+  routes: Route[];
 };
 
 export type RouteSearchQuery = {
-  sortBy?: "distance" | "elevationGain" | "duration" | "sacScale";
+  sortBy?:
+    | "distance"
+    | "elevationGain"
+    | "duration"
+    | "sacScale"
+    | "popularity"
+    | "maxHeight";
   sortOrder?: "asc" | "desc";
   name?: string;
   minDistance?: number;
@@ -99,12 +117,21 @@ export type RouteSearchQuery = {
   maxDurationHours?: number;
   difficulties?: SACScale[];
   boundingBox?: BoundingBox;
+  limit?: number;
+  offset?: number;
 };
 
-export interface RouteSearchProvider {
-  search(query: RouteSearchQuery): Promise<RouteSearchResults>;
+export interface RouteServiceProvider {
+  search(query?: RouteSearchQuery): Promise<RouteSearchResults>;
   getOne(id: number): Promise<RouteDetails | null>;
   create(route: CreateRouteParams): Promise<RouteDetails>;
   update(id: number, route: UpdateRouteParams): Promise<RouteDetails>;
   delete(id: number): Promise<void>;
 }
+
+/**
+ * HB-specific types
+ */
+export type HBRouteSearchQuery = z.infer<typeof hbRouteSearchQuerySchema>;
+export type HBRouteResponse = z.infer<typeof hbRouteResponseSchema>;
+export type HBRouteSearchResponse = z.infer<typeof hbRouteSearchReponseSchema>;

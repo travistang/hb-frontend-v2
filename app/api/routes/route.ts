@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import routeServiceProvider from "@/services/route-service";
-import { RouteSearchQuery, SACScale } from "@/services/route-service/types";
+import { SACScale } from "@/services/route-service/types";
 import { routeSearchQuerySchema } from "@/services/route-service/validator";
 
 // GET /api/routes - Search routes
@@ -42,10 +42,7 @@ export async function GET(request: NextRequest) {
       );
     }
     if (searchParams.has("difficulties")) {
-      queryParams.difficulties = searchParams
-        .get("difficulties")
-        ?.split(",")
-        .map(Number) as SACScale[];
+      queryParams.difficulties = searchParams.get("difficulties")?.split(",");
     }
 
     // Parse bounding box if all four coordinates are provided
@@ -68,6 +65,13 @@ export async function GET(request: NextRequest) {
     }
     if (searchParams.has("sortOrder")) {
       queryParams.sortOrder = searchParams.get("sortOrder");
+    }
+
+    if (searchParams.has("limit")) {
+      queryParams.limit = parseInt(searchParams.get("limit")!, 10);
+    }
+    if (searchParams.has("offset")) {
+      queryParams.offset = parseInt(searchParams.get("offset")!, 10);
     }
 
     // Validate query parameters
@@ -174,20 +178,11 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // For the mock service, we create a basic route
-    // In a real implementation, the GPX would be parsed to extract waypoints, etc.
     const newRoute = await routeServiceProvider.create({
-      id: 0, // Will be assigned by the service
       name: name.trim(),
-      distance: 0, // Would be calculated from GPX
-      elevationGain: 0, // Would be calculated from GPX
-      rating: 0,
-      duration: 0, // Would be calculated from GPX
-      sacScale: 0,
-      images: images.map((img) => ({
-        url: URL.createObjectURL(img.file),
-        filename: img.name,
-      })),
+      description: description.trim(),
+      gpx: gpxFile,
+      images,
     });
 
     return NextResponse.json(newRoute, { status: 201 });

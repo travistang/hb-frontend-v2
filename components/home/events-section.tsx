@@ -9,7 +9,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { EventCard } from "@/components/event/event-card";
-import { EventData } from "@/components/event/types";
+import { Event } from "@/components/event/types";
 import { ReactNode, useState } from "react";
 
 interface EventsSectionProps {
@@ -18,8 +18,8 @@ interface EventsSectionProps {
   defaultOpen: boolean;
   isLoading?: boolean;
   emptyMessage: string;
-  events: EventData[];
-  renderEvent?: (event: EventData, index: number) => ReactNode;
+  events: Event[];
+  renderEvent?: (event: Event, index: number) => ReactNode;
 }
 
 export function EventsSection({

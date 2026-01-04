@@ -3,10 +3,9 @@
 import { useState } from "react";
 import { EventCard } from "@/components/event/event-card";
 import {
-  EventData,
+  Event,
   NewsFeedPicture,
   DashboardResponse,
-  NewsFeedEvent,
   NewsFeedResponse,
 } from "@/components/event/types";
 import { GalleryDialog } from "@/components/event/gallery-dialog";
@@ -154,13 +153,13 @@ export function UserDashboard() {
             (ev) => (ev.pictures_uploaded?.length ?? 0) > 0
           )}
           renderEvent={(ev) => {
-            const eventData: EventData = {
+            const eventWithActivityName: Event = {
               ...ev,
               activity_name: mapActivityCodeToName(ev.activity),
             };
             return (
               <EventCard
-                event={eventData}
+                event={eventWithActivityName}
                 variant="community"
                 onOpenGallery={handleOpenGallery}
               />

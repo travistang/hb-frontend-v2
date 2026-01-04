@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import MainMenu from "@/components/layout/main-menu";
-import { getAuthState } from "@/lib/auth";
-import { cookies } from "next/headers";
 import { ReactQueryProvider } from "@/lib/query-client";
+import userService from "@/services/user-service";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,9 +25,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const auth = await getAuthState();
-  const cookieStore = await cookies();
-  const profilePicture = cookieStore.get("profilePicture")?.value ?? null;
+  const me = await userService.getMe();
 
   return (
     <html lang="en">
@@ -59,8 +56,8 @@ export default async function RootLayout({
           <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans">
             <main className="min-h-screen w-full flex-col items-center justify-center py-10 px-16 bg-white">
               <MainMenu
-                isLoggedIn={auth.isLoggedIn}
-                profilePicture={profilePicture}
+                isLoggedIn={me !== null}
+                profilePicture={me?.profile_picture?.[0] ?? null}
               />
               {children}
             </main>
