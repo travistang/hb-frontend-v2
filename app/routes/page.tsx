@@ -1,15 +1,13 @@
-import type { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Routes - Hiking Buddies",
-};
+import { LoadingPlaceholder } from "@/components/common/loading-placeholder";
+import { RouteListView } from "@/components/routes/route-list-view";
+import { Suspense } from "react";
 
 export default function RoutesPage() {
   return (
-    <div className="prose w-full max-w-none">
-      <h1>Routes</h1>
-      <p>Routes page content coming soon...</p>
-    </div>
+    <Suspense fallback={<LoadingPlaceholder label="Loading routes..." />}>
+      <RouteListView />
+    </Suspense>
   );
 }
-

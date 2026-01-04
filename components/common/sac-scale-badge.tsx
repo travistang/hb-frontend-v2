@@ -3,21 +3,21 @@
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-function sacScaleBackgroundClass(value: string): string {
+export function sacScaleBackgroundClass(value: string): string {
   const v = value.trim().toUpperCase();
   switch (v) {
     case "T1":
-      return "bg-emerald-600";
+      return "bg-chart-1";
     case "T2":
-      return "bg-sky-600";
+      return "bg-chart-2";
     case "T3":
-      return "bg-blue-800";
+      return "bg-chart-3";
     case "T4":
-      return "bg-orange-600";
+      return "bg-chart-4";
     case "T5":
-      return "bg-red-600";
+      return "bg-chart-5";
     case "T6":
-      return "bg-black";
+      return "bg-chart-6";
     default:
       return "bg-slate-500";
   }
@@ -25,15 +25,23 @@ function sacScaleBackgroundClass(value: string): string {
 
 const COMMON_BADGE_STYLES = "border-transparent text-white";
 
-export function SacScaleBadge({ value }: { value: unknown }) {
+type Props = {
+  value: unknown;
+  className?: string;
+};
+export function SacScaleBadge({ value, className }: Props) {
   if (typeof value !== "string" || !value.trim()) return null;
   const normalized = value.trim().toUpperCase();
 
   return (
-    <Badge className={cn(COMMON_BADGE_STYLES, sacScaleBackgroundClass(normalized))}>
+    <Badge
+      className={cn(
+        COMMON_BADGE_STYLES,
+        sacScaleBackgroundClass(normalized),
+        className
+      )}
+    >
       {normalized}
     </Badge>
   );
 }
-
-

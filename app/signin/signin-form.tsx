@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { routes } from "@/lib/routes";
+import { LoadingSpinner } from "@/components/common/loading-spinner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export function SignInForm() {
   const router = useRouter();
@@ -18,7 +21,7 @@ export function SignInForm() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/routes/login/", {
+      const response = await fetch(routes.api.auth.login, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,12 +50,18 @@ export function SignInForm() {
     }
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    handleSignIn();
+  };
+
   return (
-    <div className="grid gap-4">
+    <form className="grid gap-4" onSubmit={handleSubmit}>
       {error && (
-        <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
-          {error}
-        </div>
+        <Alert variant="destructive">
+          <AlertTitle>Something went wrong</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
       <div className="grid gap-2">
         <Label htmlFor="email">Email</Label>
@@ -63,11 +72,6 @@ export function SignInForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={isLoading}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !isLoading) {
-              handleSignIn();
-            }
-          }}
         />
       </div>
       <div className="grid gap-2">
@@ -79,11 +83,6 @@ export function SignInForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={isLoading}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !isLoading) {
-              handleSignIn();
-            }
-          }}
         />
       </div>
       <div className="flex gap-2 pt-2">
@@ -94,11 +93,17 @@ export function SignInForm() {
         >
           Cancel
         </Button>
-        <Button onClick={handleSignIn} disabled={isLoading}>
-          {isLoading ? "Signing in..." : "Sign in"}
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? (
+            <>
+              <LoadingSpinner className="w-4 h-4 text-primary-foreground" />
+              Signing in...
+            </>
+          ) : (
+            "Sign in"
+          )}
         </Button>
       </div>
-    </div>
+    </form>
   );
 }
-

@@ -1,23 +1,7 @@
-import { cookies } from "next/headers";
+import userService from "@/services/user-service";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const cookieStore = await cookies();
-  const authToken = cookieStore.get("authToken")?.value;
-  const pk = cookieStore.get("pk")?.value;
-  const username = cookieStore.get("username")?.value;
-
-  if (!authToken || !pk) {
-    return NextResponse.json(
-      { authenticated: false },
-      { status: 200 }
-    );
-  }
-
-  return NextResponse.json({
-    authenticated: true,
-    pk,
-    username,
-  });
+  const me = await userService.getMe();
+  return NextResponse.json(me);
 }
-

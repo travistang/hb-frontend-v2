@@ -1,7 +1,9 @@
+import { Activity } from "@/services/event-service/validator";
+
 /**
  * Maps activity codes to their display names
  */
-const ACTIVITY_CODE_MAP: Record<string, string> = {
+const ACTIVITY_CODE_MAP: Record<Activity, string> = {
   HI: "Hiking",
   SO: "Social",
   BO: "Bouldering",
@@ -16,12 +18,8 @@ const ACTIVITY_CODE_MAP: Record<string, string> = {
  * @param activityCode - The activity code (e.g., "HI", "SO")
  * @returns The activity name (e.g., "Hiking", "Social") or undefined if not found
  */
-export function mapActivityCodeToName(activityCode: unknown): string | undefined {
-  if (typeof activityCode !== "string" || !activityCode) {
-    return undefined;
-  }
-
-  const normalized = activityCode.trim().toUpperCase();
-  return ACTIVITY_CODE_MAP[normalized];
+export function mapActivityCodeToName(
+  activityCode?: Activity
+): string | undefined {
+  return activityCode ? ACTIVITY_CODE_MAP[activityCode] : undefined;
 }
-

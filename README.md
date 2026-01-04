@@ -51,29 +51,29 @@ Navigate to [http://localhost:3000](http://localhost:3000) to see the app.
 
 All API requests go through Next.js API routes that mirror the hiking-buddies.com endpoints:
 
-- `/api/routes/login/` - Login endpoint (sets cookies)
-- `/api/routes/logout/` - Logout endpoint (clears cookies)
-- `/api/routes/user_main_page/[pk]/` - Dashboard data
-- `/api/routes/news_feed/` - Community news feed
+- `/api/auth/login/` - Login endpoint (sets cookies)
+- `/api/auth/logout/` - Logout endpoint (clears cookies)
+- `/api/dashboard/` - Dashboard data (PK inferred from JWT)
+- `/api/events/news-feed/` - Community news feed
 - `/api/me` - Get current user's pk (helper for httpOnly cookie access)
 
 ### Current Prototype Authentication Flow
 
 1. User navigates to `/signin`
-2. Form submits to `/api/routes/login/`
+2. Form submits to `/api/auth/login/`
 3. Server validates with backend, sets HTTP-only cookies
 4. User is redirected to home
-5. Dashboard fetches `/api/me` to get user pk, then `/api/routes/user_main_page/{pk}/`
-6. Sign out calls `/api/routes/logout/` to clear cookies
+5. Dashboard fetches `/api/me` to get user pk, then `/api/dashboard/` (PK inferred from JWT)
+6. Sign out calls `/api/auth/logout/` to clear cookies
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run start` | Start production server |
-| `npm run lint` | Run ESLint |
+| Command         | Description              |
+| --------------- | ------------------------ |
+| `npm run dev`   | Start development server |
+| `npm run build` | Build for production     |
+| `npm run start` | Start production server  |
+| `npm run lint`  | Run ESLint               |
 
 ## Production Docker Build
 
@@ -137,3 +137,8 @@ To learn more about Next.js, take a look at the following resources:
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial
 
+## TODOs
+
+There are list of things that are being mocked and needs to be **immediately** replaced once there are more data:
+
+- Ways to get identity from JWT token (needs another HB endpoint) - currently we count on "/api/dashboard/"

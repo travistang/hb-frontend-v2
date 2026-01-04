@@ -2,7 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Carousel,
   CarouselApi,
@@ -12,16 +17,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { NewsFeedPicture } from "@/components/event/types";
-
-const ASSET_BASE_URL = process.env.NEXT_PUBLIC_ASSET_BASE_URL;
-
-function safeAssetUrl(path: unknown) {
-  if (typeof path !== "string" || !path) return "";
-  // API returns "#" as a placeholder for "no image"
-  if (path === "#") return "";
-  if (path.startsWith("http://") || path.startsWith("https://")) return path;
-  return `${ASSET_BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
-}
+import { safeAssetUrl } from "@/lib/asset-utils";
 
 interface GalleryDialogProps {
   open: boolean;
@@ -30,7 +26,12 @@ interface GalleryDialogProps {
   initialIndex?: number;
 }
 
-export function GalleryDialog({ open, onOpenChange, pictures, initialIndex = 0 }: GalleryDialogProps) {
+export function GalleryDialog({
+  open,
+  onOpenChange,
+  pictures,
+  initialIndex = 0,
+}: GalleryDialogProps) {
   const [galleryIndex, setGalleryIndex] = useState(initialIndex);
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const isInitialSetup = useRef(true);
@@ -39,7 +40,10 @@ export function GalleryDialog({ open, onOpenChange, pictures, initialIndex = 0 }
   // Update galleryIndex when initialIndex prop changes (e.g., when opening with new pictures)
   useEffect(() => {
     if (open) {
-      const validIndex = Math.max(0, Math.min(initialIndex, pictures.length - 1));
+      const validIndex = Math.max(
+        0,
+        Math.min(initialIndex, pictures.length - 1)
+      );
       setGalleryIndex(validIndex);
       isInitialSetup.current = true;
     }
@@ -120,7 +124,11 @@ export function GalleryDialog({ open, onOpenChange, pictures, initialIndex = 0 }
         </DialogHeader>
         <div className="flex flex-col gap-3 min-h-0 overflow-hidden">
           <div className="flex-1 min-h-0 flex items-center relative">
-            <Carousel setApi={setCarouselApi} className="w-full" opts={{loop: true}}>
+            <Carousel
+              setApi={setCarouselApi}
+              className="w-full"
+              opts={{ loop: true }}
+            >
               <CarouselContent>
                 {pictures.map((pic) => {
                   const fullSrc = safeAssetUrl(pic.url || pic.thumb);
@@ -143,8 +151,8 @@ export function GalleryDialog({ open, onOpenChange, pictures, initialIndex = 0 }
                   );
                 })}
               </CarouselContent>
-              <CarouselPrevious className="!left-2 cursor-pointer"/>
-              <CarouselNext className="!right-2 cursor-pointer"/>
+              <CarouselPrevious className="!left-2 cursor-pointer" />
+              <CarouselNext className="!right-2 cursor-pointer" />
             </Carousel>
           </div>
 
@@ -159,7 +167,9 @@ export function GalleryDialog({ open, onOpenChange, pictures, initialIndex = 0 }
                   type="button"
                   onClick={() => setGalleryIndex(index)}
                   className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-md border cursor-pointer ${
-                    isActive ? "border-primary ring-2 ring-primary/50" : "border-border"
+                    isActive
+                      ? "border-primary ring-2 ring-primary/50"
+                      : "border-border"
                   }`}
                 >
                   <Image
@@ -178,4 +188,3 @@ export function GalleryDialog({ open, onOpenChange, pictures, initialIndex = 0 }
     </Dialog>
   );
 }
-

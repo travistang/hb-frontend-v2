@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { getAuthState } from "@/lib/auth";
 import { SignInForm } from "./signin-form";
+import userService from "@/services/user-service";
 
 export const metadata: Metadata = {
   title: "Sign In - Hiking Buddies",
 };
 
 export default async function SignInPage() {
-  const auth = await getAuthState();
+  const me = await userService.getMe();
 
   // Redirect to home if already logged in
-  if (auth.isLoggedIn) {
+  if (me !== null) {
     redirect("/");
   }
 
@@ -21,10 +21,9 @@ export default async function SignInPage() {
       <p className="text-muted-foreground">
         Enter your email and password to sign in to your account.
       </p>
-      <div className="not-prose mt-6 max-w-md">
+      <div className="not-prose mt-6">
         <SignInForm />
       </div>
     </div>
   );
 }
-
