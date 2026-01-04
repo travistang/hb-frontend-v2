@@ -23,6 +23,7 @@ const baseMockRouteDetails = [
   {
     id: 1,
     name: "Jochberg Mountain Trail",
+    description: "A beautiful alpine ridge trail",
     distance: 8.5,
     elevationGain: 586, // 1453m - 867m
     duration: 240, // 4 hours in minutes
@@ -36,6 +37,9 @@ const baseMockRouteDetails = [
       minLng: 11.349174,
       maxLng: 11.37194,
     },
+    maxHeight: 1453,
+    gpx: "",
+    images: [],
     waypoints: [
       { latitude: 47.62189, longitude: 11.349287, elevation: 867.0 },
       {
@@ -2771,6 +2775,7 @@ const baseMockRouteDetails = [
   {
     id: 2,
     name: "Alpine Ridge Trail",
+    description: "A beautiful alpine ridge trail",
     distance: 12.0,
     duration: 360, // 6 hours in minutes
     rating: 2100, // ELO-style rating
@@ -2784,6 +2789,10 @@ const baseMockRouteDetails = [
     sacScale: 3,
     peaks: [],
     huts: [],
+    maxHeight: 1300,
+    gpx: "",
+    images: [],
+
     waypoints: [
       { latitude: 47.55, longitude: 11.4, elevation: 1000 },
       { latitude: 47.552, longitude: 11.402, elevation: 1020 },
@@ -2817,13 +2826,23 @@ const baseMockRouteDetails = [
   {
     id: 3,
     name: "Forest Valley Loop",
+    description: "A beautiful forest valley loop",
     distance: 6.5,
     elevationGain: 400,
     duration: 180, // 3 hours in minutes
     rating: 1650, // ELO-style rating
     sacScale: 1,
+    maxHeight: 855,
     peaks: [],
     huts: [],
+    gpx: "",
+    images: [],
+    boundingBox: {
+      minLat: 47.6,
+      maxLat: 47.621,
+      minLng: 11.3,
+      maxLng: 11.318,
+    },
     waypoints: [
       { latitude: 47.6, longitude: 11.3, elevation: 800 },
       { latitude: 47.601, longitude: 11.302, elevation: 805 },

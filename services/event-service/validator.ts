@@ -18,13 +18,17 @@ export const activitySchema = z.enum([
   "SB",
   "SS",
 ]);
+export const citySchema = z.object({
+  name: z.string(),
+  coordinates: z.tuple([z.number(), z.number()]),
+});
 // Create event schema (all fields optional except organizer_id)
 export const createEventSchema = z.object({
   title: z.string().min(1),
   description: z.string(),
   start: z.string(), // Accept ISO datetime strings
   meeting_point: z.string(),
-  city: z.string(),
+  city: citySchema.optional(),
   activity: activitySchema,
   activity_name: z.string().optional(),
   // NO organizer_id, it is set by the backend!
@@ -46,8 +50,8 @@ export const updateEventSchema = z.object({
   description: z.string().optional(),
   start: z.string().optional(), // Accept ISO datetime strings
   meeting_point: z.string().optional(),
-  city: z.string().optional(),
-  activity: z.string().optional(),
+  city: citySchema.optional(),
+  activity: activitySchema.optional(),
   activity_name: z.string().optional(),
   organizer_id: z.number().int().positive().optional(),
   route_id: z.number().int().positive().optional(),
