@@ -1,7 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import {
+  ReadonlyURLSearchParams,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,8 +13,17 @@ import { routes } from "@/lib/routes";
 import { LoadingSpinner } from "@/components/common/loading-spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
+const computeRedirectTarget = (searchParams: ReadonlyURLSearchParams) => {
+  const redirect = searchParams.get("redirect");
+  if (redirect?.startsWith("/")) {
+    return redirect;
+  }
+  return routes.pages.home;
+};
+
 export function SignInForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +54,7 @@ export function SignInForm() {
       }
 
       // Redirect to home on success
-      router.push("/");
+      router.push(computeRedirectTarget(searchParams));
       router.refresh();
     } catch {
       setError("An error occurred. Please try again later.");

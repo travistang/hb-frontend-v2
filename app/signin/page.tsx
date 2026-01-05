@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { SignInForm } from "./signin-form";
 import userService from "@/services/user-service";
+import { routes } from "@/lib/routes";
 
 export const metadata: Metadata = {
   title: "Sign In - Hiking Buddies",
@@ -12,7 +13,7 @@ export default async function SignInPage() {
 
   // Redirect to home if already logged in
   if (me !== null) {
-    redirect("/");
+    redirect(routes.pages.home);
   }
 
   return (
