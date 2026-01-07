@@ -10,6 +10,7 @@ export default async function RoutesPage() {
   if (me === null) {
     redirect(routes.pages.signin + "?redirect=" + routes.pages.routes);
   }
+  console.log("yo!");
   return (
     <Suspense fallback={<LoadingPlaceholder label="Loading routes..." />}>
       <RouteListView />
